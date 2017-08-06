@@ -4,20 +4,8 @@ set -euo pipefail
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
 usage () {
-	echo "Usage: $0 [i686|dual]"
+	echo "Usage: $0 [-d date] [i686|dual]"
 }
-
-if [ "$#" -eq 0 ] ; then 
-	echo "No architecture specified, selecting 'i686'"
-	arch="i686"
-elif [ "$#" -eq 1 ] ; then
-	echo "Selecting architecture '$1'"
-	arch="$1"
-else
-	usage
-	echo "Too many arguments, exiting" >&2
-	exit 1
-fi
 
 fg_green="\033[32m"
 fg_red="\033[31m"
@@ -30,8 +18,33 @@ MIRRORLIST_FILE="https://raw.githubusercontent.com/archlinux32/packages/master/c
 mirrorlist="$(curl "$MIRRORLIST_FILE" 2>/dev/null | grep Server | cut -d '=' -f 2 | sed -e 's/\s//g;s_$arch/$repo_archisos/_')"
 
 declare -a available_mirrors
+iso_date=''
 
-read -r -p "Date of the ISO: " iso_date
+while getopts "u:p:t:f:d:" o; do
+    case "${o}" in
+        d)
+            iso_date=${OPTARG}
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+[ -z "$iso_date" ] && read -r -p "Date of the ISO: " iso_date
+
+if [ "$#" -eq 0 ] ; then 
+	echo "No architecture specified, selecting 'i686'"
+	arch="i686"
+elif [ "$#" -eq 1 ] ; then
+	echo "Selecting architecture '$1'"
+	arch="$1"
+else
+	usage
+	echo "Too many arguments, exiting" >&2
+	exit 1
+fi
 
 iso_string="archlinux-$iso_date-$arch.iso"
 
