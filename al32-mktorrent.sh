@@ -28,17 +28,20 @@ fg_bold="\033[1m"
 
 MIRRORLIST_FILE="https://raw.githubusercontent.com/archlinux32/packages/master/core/pacman-mirrorlist/mirrorlist"
 
-mirrorlist="$(curl "$MIRRORLIST_FILE" 2>/dev/null | grep Server | cut -d '=' -f 2 | sed -e 's/\s//g;s_$arch/$repo_archisos/_')"
-
 declare -a available_mirrors
 iso_date=''
 
-while getopts "u:p:t:f:d:" o; do
+while getopts "d:h" o; do
     case "${o}" in
         d)
             iso_date=${OPTARG}
             ;;
+        h)
+            usage
+			exit
+            ;;
         *)
+			echo "$0: unknown option ${o}" >&2
             usage
             ;;
     esac
@@ -46,6 +49,8 @@ done
 shift $((OPTIND-1))
 
 [ -z "$iso_date" ] && read -r -p "Date of the ISO: " iso_date
+
+mirrorlist="$(curl "$MIRRORLIST_FILE" 2>/dev/null | grep Server | cut -d '=' -f 2 | sed -e 's/\s//g;s_$arch/$repo_archisos/_')"
 
 if [ "$#" -eq 0 ] ; then 
 	echo "No architecture specified, selecting 'i686'"
