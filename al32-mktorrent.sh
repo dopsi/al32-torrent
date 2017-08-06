@@ -66,6 +66,11 @@ echo -e "$fg_reset${fg_bold}Checking SHA512 sums...$fg_reset"
 sha512sum --ignore-missing --check sha512sums || exit 101
 
 echo -e "$fg_reset${fg_bold}Create torrent file...$fg_reset"
+if [ -f "$iso_string.torrent" ] ; then
+	rm "$iso_string.torrent"
+fi
 mktorrent --announce=http://dopsi.ch:6969/announce --web-seed="$(join_by ',' "${available_mirrors[@]}")" "$iso_string" 
 
+echo -e "$fg_reset${fg_bold}Create magnet link...$fg_reset"
+transmission-show --magnet "$iso_string.torrent"
 # vim: set ts=4 sw=4:
