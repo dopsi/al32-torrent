@@ -1,2 +1,4 @@
 *.iso*
 *sums
+*.rss
+.idea/workspace.xml
