@@ -2,6 +2,10 @@
 
 Torrent creation script for [ArchLinux32](https://archlinux32.org)
 
+The latest torrents are hosted on [static.dopsi.ch](https://static.dopsi.ch/al32/)
+along with the RSS feeds (for [i686](https://static.dopsi.ch/al32/feed_i686.rss) and
+[dual](https://static.dopsi.ch/al32/feed_dual.rss)).
+
 ## Usage
 
     al32-mktorrent.sh [ -d date ]
