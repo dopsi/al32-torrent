@@ -4,20 +4,19 @@ Torrent creation script for [ArchLinux32](https://archlinux32.org)
 
 ## Usage
 
-    al32-mktorrent.sh [ -d date ] [ i686 | dual ]
+    al32-mktorrent.sh [ -d date ]
 
-If no architecture is specified, the script will default to `i686`.
 If no date is specified, the script will prompt for a date during the process.
 
 ## Features
 
-* [ ] Torrent creation
+* [x] Torrent creation
   * [x] Create a torrent file per architecture
     * [x] Obtain the latest mirrorlist
     * [x] Check mirrors for ISO availability
     * [x] Download ISO
     * [x] Check ISO
-  * [ ] Create both torrent files at once
+  * [x] Create both torrent files at once
   * [x] Create a magnet link per architecture
 * [ ] Torrent upload
   * [ ] Upload the torrent file to a server via SSH (for sharing)
