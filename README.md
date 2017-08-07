@@ -23,7 +23,7 @@ If no date is specified, the script will prompt for a date during the process.
   * [ ] Upload the torrent file to a server via SSH (for sharing)
   * [ ] Upload the torrent to transmission-server
 * [ ] Inform the world of the new torrent file
-  * [ ] Add the magnet link to a RSS feed
+  * [x] Add the magnet link to a RSS feed
   * [ ] Upload the new RSS feed to the server
   * [ ] Send an email to the arch-ports list
 

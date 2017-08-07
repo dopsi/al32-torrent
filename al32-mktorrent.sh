@@ -103,5 +103,10 @@ fi
 mktorrent --announce=http://dopsi.ch:6969/announce --web-seed="$(join_by ',' "${available_mirrors[@]}")" "$iso_string" 
 
 echo -e "$fg_reset${fg_bold}Create magnet link...$fg_reset"
-transmission-show --magnet "$iso_string.torrent"
+magnet_link="$(transmission-show --magnet "$iso_string.torrent")"
+echo "$magnet_link"
+
+echo -e "$fg_reset${fg_bold}Create RSS feed files...$fg_reset"
+python magnet2feed.py "$magnet_link" "$iso_date"
+
 # vim: set ts=4 sw=4:
