@@ -29,6 +29,7 @@ fg_bold="\033[1m"
 MIRRORLIST_FILE="https://raw.githubusercontent.com/archlinux32/packages/master/core/pacman-mirrorlist/mirrorlist"
 
 function create_torrent_for_arch () {
+    declare -a available_mirrors
     mirrorlist="$(curl "$MIRRORLIST_FILE" 2>/dev/null | grep Server | cut -d '=' -f 2 | sed -e 's/\s//g;s_$arch/$repo_archisos/_')"
 
     if [ "$#" -eq 0 ] ; then
@@ -92,7 +93,6 @@ function create_torrent_for_arch () {
 ### Actual program
 
 declare -a architectures=("i686" "dual")
-declare -a available_mirrors
 iso_date=''
 
 while getopts "d:h" o; do
