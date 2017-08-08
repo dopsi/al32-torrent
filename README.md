@@ -8,8 +8,9 @@ along with the RSS feeds (for [i686](https://static.dopsi.ch/al32/feed_i686.rss)
 
 ## Usage
 
-    al32-mktorrent.sh [ -d date ]
+    al32-mktorrent.sh [ -d date ] [ arch... ]
 
+If no arch is specified both `i686` and `dual` will be generated.
 If no date is specified, the script will prompt for a date during the process.
 
 ## Features

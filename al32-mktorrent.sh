@@ -17,7 +17,7 @@ set -euo pipefail
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
 usage () {
-	echo "Usage: $0 [-d date]"
+	echo "Usage: $0 [-d date] [arch...]"
 }
 
 fg_green="\033[32m"
@@ -111,6 +111,10 @@ while getopts "d:h" o; do
     esac
 done
 shift $((OPTIND-1))
+
+if [ "$#" -gt 0 ] ; then
+	architectures=($@)
+fi
 
 [ -z "$iso_date" ] && read -r -p "Date of the ISO: " iso_date
 
