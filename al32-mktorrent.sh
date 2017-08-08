@@ -28,6 +28,11 @@ fg_bold="\033[1m"
 
 MIRRORLIST_FILE="https://raw.githubusercontent.com/archlinux32/packages/master/core/pacman-mirrorlist/mirrorlist"
 
+function cleanup () {
+    echo -n -e "$fg_reset${fg_bold}Cleaning up directory...$fg_reset "
+	rm -f archlinux-2017.08.01-dual.iso.sig archlinux-2017.08.01-dual.iso.torrent archlinux-2017.08.01-i686.iso.sig archlinux-2017.08.01-i686.iso.torrent feed_dual.rss feed_i686.rss sha512sums
+}
+
 function create_torrent_for_arch () {
     declare -a available_mirrors
     mirrorlist="$(curl "$MIRRORLIST_FILE" 2>/dev/null | grep Server | cut -d '=' -f 2 | sed -e 's/\s//g;s_$arch/$repo_archisos/_')"
@@ -117,6 +122,8 @@ if [ "$#" -gt 0 ] ; then
 fi
 
 [ -z "$iso_date" ] && read -r -p "Date of the ISO: " iso_date
+
+cleanup
 
 for a in "${architectures[@]}" ; do
 	create_torrent_for_arch "$a"
