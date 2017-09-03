@@ -95,6 +95,18 @@ function create_torrent_for_arch () {
     python magnet2feed.py "$magnet_link" "$iso_date"
 }
 
+### Check for if required programs are present
+
+which mktorrent 2>/dev/null || (
+	echo "Missing mktorrent"
+	exit 1
+)
+
+python -c "import feedgenerator" 2>/dev/null || (
+	echo "Missing python module feedgenerator"
+	exit 1
+)
+
 ### Actual program
 
 declare -a architectures=("i686" "dual")
