@@ -15,21 +15,21 @@ If no date is specified, the script will prompt for a date during the process.
 
 ## Features
 
-* [x] Torrent creation
-  * [x] Create a torrent file per architecture
-    * [x] Obtain the latest mirrorlist
-    * [x] Check mirrors for ISO availability
-    * [x] Download ISO
-    * [x] Check ISO
-  * [x] Create both torrent files at once
-  * [x] Create a magnet link per architecture
-* [ ] Torrent upload
-  * [ ] Upload the torrent file to a server via SSH (for sharing)
-  * [ ] Upload the torrent to transmission-server
-* [ ] Inform the world of the new torrent file
-  * [x] Add the magnet link to a RSS feed
-  * [ ] Upload the new RSS feed to the server
-  * [ ] Send an email to the arch-ports list
+  * [x] Torrent creation
+    * [x] Create a torrent file per architecture
+      * [x] Obtain the latest mirrorlist
+      * [x] Check mirrors for ISO availability
+      * [x] Download ISO
+      * [x] Check ISO
+    * [x] Create both torrent files at once
+    * [x] Create a magnet link per architecture
+  * [ ] Torrent upload
+    * [ ] Upload the torrent file to a server via SSH (for sharing)
+    * [ ] Upload the torrent to transmission-server
+  * [ ] Inform the world of the new torrent file
+    * [x] Add the magnet link to a RSS feed
+    * [ ] Upload the new RSS feed to the server
+    * [ ] Send an email to the arch-ports list
 
 ## License
 
