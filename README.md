@@ -1,6 +1,7 @@
 # al32-mktorrent
 
-Torrent creation script for [ArchLinux32](https://archlinux32.org)
+Torrent creation script for [ArchLinux32](https://archlinux32.org), with upload
+capabilities via `scp` and to [hefur](https://github.com/abique/hefur).
 
 The latest torrents are hosted on [static.dopsi.ch](https://static.dopsi.ch/al32/)
 along with the RSS feeds (for [i686](https://static.dopsi.ch/al32/feed_i686.rss) and
@@ -8,10 +9,12 @@ along with the RSS feeds (for [i686](https://static.dopsi.ch/al32/feed_i686.rss)
 
 ## Usage
 
-    al32-mktorrent.sh [ -d date ] [ arch... ]
+    al32-mktorrent.sh [ -d date ] [ -w webdir ] [ -t hefurdir ] [ arch... ]
 
-If no arch is specified both `i686` and `dual` will be generated.
-If no date is specified, the script will prompt for a date during the process.
+If no `arch` is specified both `i686` and `dual` will be generated.
+If no `date` is specified, the script will prompt for a date during the process.
+If `hefurdir` or `webdir` is not specified no file will be uploaded to 
+the corresponding server.
 
 ## Features
 
@@ -24,11 +27,12 @@ If no date is specified, the script will prompt for a date during the process.
     * [x] Create both torrent files at once
     * [x] Create a magnet link per architecture
   * [ ] Torrent upload
-    * [ ] Upload the torrent file to a server via SSH (for sharing)
+    * [x] Upload the torrent file to a web server via SSH
+    * [x] Upload the torrent file to a torrent tracker via SSH
     * [ ] Upload the torrent to transmission-server
   * [ ] Inform the world of the new torrent file
     * [x] Add the magnet link to a RSS feed
-    * [ ] Upload the new RSS feed to the server
+    * [x] Upload the new RSS feed to the server
     * [ ] Send an email to the arch-ports list
 
 ## License

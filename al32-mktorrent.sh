@@ -17,7 +17,7 @@ set -euo pipefail
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
 usage () {
-	echo "Usage: $0 [-d date] [arch...]"
+	echo "Usage: $0 [-d date] [-w webdir] [-t hefurdir] [arch...]"
 }
 
 fg_green="\033[32m"
@@ -95,6 +95,13 @@ function create_torrent_for_arch () {
     python magnet2feed.py "$magnet_link" "$iso_date"
 }
 
+function upload_file_to_remote_dir {
+	if [ -f "$1" ] && [ -n "$2" ] ; then
+        echo -e "$fg_reset${fg_bold}Uploading file$fg_reset "${fg_blue}$1$fg_reset" ${fg_bold}to$fg_reset "${fg_blue}$1$fg_reset" $fg_bold...$fg_reset"
+		scp "$1" "$2"
+	fi
+}
+
 ### Check for if required programs are present
 
 which mktorrent 2>/dev/null || (
@@ -111,11 +118,19 @@ python -c "import feedgenerator" 2>/dev/null || (
 
 declare -a architectures=("i686" "dual")
 iso_date=''
+web_dir=''
+hefur_dir=''
 
-while getopts "d:h" o; do
+while getopts "d:w:t:h" o; do
     case "${o}" in
         d)
             iso_date=${OPTARG}
+            ;;
+        t)
+            hefur_dir=${OPTARG}
+            ;;
+        w)
+            web_dir=${OPTARG}
             ;;
         h)
             usage
@@ -139,6 +154,18 @@ cleanup
 
 for a in "${architectures[@]}" ; do
 	create_torrent_for_arch "$a"
+done
+
+for a in "${architectures[@]}" ; do
+    torrent_filename="archlinux-$iso_date-$arch.iso.torrent"
+	if [ -n "$web_dir" ] ; then
+		feed_filename="feed_$arch.rss"
+		upload_file_to_remote_dir "$torrent_filename" "$web_dir"
+		upload_file_to_remote_dir "$feed_filename" "$web_dir"
+	fi
+	if [ -n "$hefur_dir" ] ; then
+		upload_file_to_remote_dir "$torrent_filename" "$hefur_dir"
+	fi
 done
 
 # vim: set ts=4 sw=4:
