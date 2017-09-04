@@ -114,6 +114,11 @@ python -c "import feedgenerator" 2>/dev/null || (
 	exit 1
 )
 
+which transmission-show 2>/dev/null || (
+	echo "Missing transmission-show"
+	exit 1
+)
+
 ### Actual program
 
 declare -a architectures=("i686" "dual")
