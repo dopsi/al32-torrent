@@ -29,75 +29,75 @@ fg_bold="\033[1m"
 MIRRORLIST_FILE="https://raw.githubusercontent.com/archlinux32/packages/master/core/pacman-mirrorlist/mirrorlist"
 
 function cleanup () {
-    echo -n -e "$fg_reset${fg_bold}Cleaning up directory...$fg_reset "
-	rm -f archlinux-2017.08.01-dual.iso.sig archlinux-2017.08.01-dual.iso.torrent archlinux-2017.08.01-i686.iso.sig archlinux-2017.08.01-i686.iso.torrent feed_dual.rss feed_i686.rss sha512sums
+	echo -n -e "$fg_reset${fg_bold}Cleaning up directory...$fg_reset "
+	rm -f *.sig *.torrent *.rss sha512sums
 }
 
 function create_torrent_for_arch () {
-    declare -a available_mirrors
-    mirrorlist="$(curl "$MIRRORLIST_FILE" 2>/dev/null | grep Server | cut -d '=' -f 2 | sed -e 's/\s//g;s_$arch/$repo_archisos/_')"
+	declare -a available_mirrors
+	mirrorlist="$(curl "$MIRRORLIST_FILE" 2>/dev/null | grep Server | cut -d '=' -f 2 | sed -e 's/\s//g;s_$arch/$repo_archisos/_')"
 
-    if [ "$#" -eq 0 ] ; then
-        echo "No architecture specified, selecting 'i686'"
-        arch="i686"
-    elif [ "$#" -eq 1 ] ; then
-        echo "Selecting architecture '$1'"
-        arch="$1"
-    else
-        usage
-        echo "Too many arguments, exiting" >&2
-        exit 1
-    fi
+	if [ "$#" -eq 0 ] ; then
+		echo "No architecture specified, selecting 'i686'"
+		arch="i686"
+	elif [ "$#" -eq 1 ] ; then
+		echo "Selecting architecture '$1'"
+		arch="$1"
+	else
+		usage
+		echo "Too many arguments, exiting" >&2
+		exit 1
+	fi
 
-    iso_string="archlinux-$iso_date-$arch.iso"
+	iso_string="archlinux-$iso_date-$arch.iso"
 
-    for i in $mirrorlist ; do
-        echo -n -e "$fg_reset${fg_bold}Checking $fg_reset$fg_blue$i$fg_reset "
-        curl -g "$i" 2>/dev/null | grep -q "$iso_string" && (
-            echo -e "$fg_reset${fg_green}OK$fg_reset"
-        ) || ( echo -e "$fg_reset${fg_red}Failed$fg_reset" ; false ) || continue
-        available_mirrors=(${available_mirrors[@]} "$i")
-    done
+	for i in $mirrorlist ; do
+		echo -n -e "$fg_reset${fg_bold}Checking $fg_reset$fg_blue$i$fg_reset "
+		curl -g "$i" 2>/dev/null | grep -q "$iso_string" && (
+			echo -e "$fg_reset${fg_green}OK$fg_reset"
+		) || ( echo -e "$fg_reset${fg_red}Failed$fg_reset" ; false ) || continue
+		available_mirrors=(${available_mirrors[@]} "$i")
+	done
 
-    echo "${#available_mirrors[@]} mirrors available"
-
-
-    if [ ! -f "$iso_string" ] ; then
-        echo -e "$fg_reset${fg_bold}Downloading iso...$fg_reset"
-        curl -O "${available_mirrors[0]}$iso_string"
-    else
-        echo -e "$fg_reset${fg_bold}Reusing already downloaded iso...$fg_reset"
-    fi
+	echo "${#available_mirrors[@]} mirrors available"
 
 
-    echo -e "$fg_reset${fg_bold}Downloading verification files...$fg_reset"
-    curl -O "${available_mirrors[0]}$iso_string.sig"
-    curl -O "${available_mirrors[0]}sha512sums"
+	if [ ! -f "$iso_string" ] ; then
+		echo -e "$fg_reset${fg_bold}Downloading iso...$fg_reset"
+		curl -O "${available_mirrors[0]}$iso_string"
+	else
+		echo -e "$fg_reset${fg_bold}Reusing already downloaded iso...$fg_reset"
+	fi
 
-    echo -n -e "$fg_reset${fg_bold}Checking PGP signature...$fg_reset "
-    gpg --verify "$iso_string.sig" "$iso_string" || exit 100
-    echo -e "$fg_reset${fg_green}OK"
 
-    echo -e "$fg_reset${fg_bold}Checking SHA512 sums...$fg_reset"
-    sha512sum --ignore-missing --check sha512sums || exit 101
+	echo -e "$fg_reset${fg_bold}Downloading verification files...$fg_reset"
+	curl -O "${available_mirrors[0]}$iso_string.sig"
+	curl -O "${available_mirrors[0]}sha512sums"
 
-    echo -e "$fg_reset${fg_bold}Create torrent file...$fg_reset"
-    if [ -f "$iso_string.torrent" ] ; then
-        rm "$iso_string.torrent"
-    fi
-    mktorrent --announce=http://dopsi.ch:6969/announce --web-seed="$(join_by ',' "${available_mirrors[@]}")" "$iso_string"
+	echo -n -e "$fg_reset${fg_bold}Checking PGP signature...$fg_reset "
+	gpg --verify "$iso_string.sig" "$iso_string" || exit 100
+	echo -e "$fg_reset${fg_green}OK"
 
-    echo -e "$fg_reset${fg_bold}Create magnet link...$fg_reset"
-    magnet_link="$(transmission-show --magnet "$iso_string.torrent")"
-    echo "$magnet_link"
+	echo -e "$fg_reset${fg_bold}Checking SHA512 sums...$fg_reset"
+	sha512sum --ignore-missing --check sha512sums || exit 101
 
-    echo -e "$fg_reset${fg_bold}Create RSS feed files...$fg_reset"
-    python magnet2feed.py "$magnet_link" "$iso_date"
+	echo -e "$fg_reset${fg_bold}Create torrent file...$fg_reset"
+	if [ -f "$iso_string.torrent" ] ; then
+		rm "$iso_string.torrent"
+	fi
+	mktorrent --announce=http://dopsi.ch:6969/announce --web-seed="$(join_by ',' "${available_mirrors[@]}")" "$iso_string"
+
+	echo -e "$fg_reset${fg_bold}Create magnet link...$fg_reset"
+	magnet_link="$(transmission-show --magnet "$iso_string.torrent")"
+	echo "$magnet_link"
+
+	echo -e "$fg_reset${fg_bold}Create RSS feed files...$fg_reset"
+	python magnet2feed.py "$magnet_link" "$iso_date"
 }
 
 function upload_file_to_remote_dir {
 	if [ -f "$1" ] && [ -n "$2" ] ; then
-        echo -e "$fg_reset${fg_bold}Uploading file$fg_reset "${fg_blue}$1$fg_reset" ${fg_bold}to$fg_reset "${fg_blue}$1$fg_reset" $fg_bold...$fg_reset"
+		echo -e "$fg_reset${fg_bold}Uploading file$fg_reset "${fg_blue}$1$fg_reset" ${fg_bold}to$fg_reset "${fg_blue}$1$fg_reset" $fg_bold...$fg_reset"
 		scp "$1" "$2"
 	fi
 }
@@ -122,25 +122,25 @@ web_dir=''
 hefur_dir=''
 
 while getopts "d:w:t:h" o; do
-    case "${o}" in
-        d)
-            iso_date=${OPTARG}
-            ;;
-        t)
-            hefur_dir=${OPTARG}
-            ;;
-        w)
-            web_dir=${OPTARG}
-            ;;
-        h)
-            usage
+	case "${o}" in
+		d)
+			iso_date=${OPTARG}
+			;;
+		t)
+			hefur_dir=${OPTARG}
+			;;
+		w)
+			web_dir=${OPTARG}
+			;;
+		h)
+			usage
 			exit
-            ;;
-        *)
+			;;
+		*)
 			echo "$0: unknown option ${o}" >&2
-            usage
-            ;;
-    esac
+			usage
+			;;
+	esac
 done
 shift $((OPTIND-1))
 
@@ -157,7 +157,7 @@ for a in "${architectures[@]}" ; do
 done
 
 for a in "${architectures[@]}" ; do
-    torrent_filename="archlinux-$iso_date-$arch.iso.torrent"
+	torrent_filename="archlinux-$iso_date-$arch.iso.torrent"
 	if [ -n "$web_dir" ] ; then
 		feed_filename="feed_$arch.rss"
 		upload_file_to_remote_dir "$torrent_filename" "$web_dir"
