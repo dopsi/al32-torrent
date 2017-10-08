@@ -162,9 +162,9 @@ for a in "${architectures[@]}" ; do
 done
 
 for a in "${architectures[@]}" ; do
-	torrent_filename="archlinux-$iso_date-$arch.iso.torrent"
+	torrent_filename="archlinux-$iso_date-$a.iso.torrent"
 	if [ -n "$web_dir" ] ; then
-		feed_filename="feed_$arch.rss"
+		feed_filename="feed_$a.rss"
 		upload_file_to_remote_dir "$torrent_filename" "$web_dir"
 		upload_file_to_remote_dir "$feed_filename" "$web_dir"
 	fi
