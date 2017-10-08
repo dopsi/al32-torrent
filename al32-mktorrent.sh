@@ -104,7 +104,7 @@ function upload_file_to_remote_dir {
 
 ### Check for if required programs are present
 
-which mktorrent 2>/dev/null || (
+which mktorrent 2>&1 >/dev/null || (
 	echo "Missing mktorrent"
 	exit 1
 )
@@ -114,7 +114,7 @@ python -c "import feedgenerator" 2>/dev/null || (
 	exit 1
 )
 
-which transmission-show 2>/dev/null || (
+which transmission-show 2>&1 >/dev/null || (
 	echo "Missing transmission-show"
 	exit 1
 )
