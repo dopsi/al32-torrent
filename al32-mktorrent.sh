@@ -30,7 +30,7 @@ MIRRORLIST_FILE="https://raw.githubusercontent.com/archlinux32/packages/master/c
 
 function cleanup () {
 	echo -n -e "$fg_reset${fg_bold}Cleaning up directory...$fg_reset "
-	rm -f *.sig *.torrent *.rss sha512sums
+	rm -f ./*.sig ./*.torrent ./*.rss sha512sums
 }
 
 function create_torrent_for_arch () {
@@ -97,7 +97,7 @@ function create_torrent_for_arch () {
 
 function upload_file_to_remote_dir {
 	if [ -f "$1" ] && [ -n "$2" ] ; then
-		echo -e "$fg_reset${fg_bold}Uploading file$fg_reset "${fg_blue}$1$fg_reset" ${fg_bold}to$fg_reset "${fg_blue}$1$fg_reset" $fg_bold...$fg_reset"
+		echo -e "$fg_reset${fg_bold}Uploading file$fg_reset ${fg_blue}$1$fg_reset ${fg_bold}to$fg_reset ${fg_blue}$1$fg_reset $fg_bold...$fg_reset"
 		scp "$1" "$2"
 	fi
 }
