@@ -18,21 +18,21 @@ the corresponding server.
 
 ## Features
 
-  * [x] Torrent creation
-    * [x] Create a torrent file per architecture
-      * [x] Obtain the latest mirrorlist
-      * [x] Check mirrors for ISO availability
-      * [x] Download ISO
-      * [x] Check ISO
-    * [x] Create both torrent files at once
-    * [x] Create a magnet link per architecture
+  * [X] Torrent creation
+    * [X] Create a torrent file per architecture
+      * [X] Obtain the latest mirrorlist
+      * [X] Check mirrors for ISO availability
+      * [X] Download ISO
+      * [X] Check ISO
+    * [X] Create both torrent files at once
+    * [X] Create a magnet link per architecture
   * [ ] Torrent upload
-    * [x] Upload the torrent file to a web server via SSH
-    * [x] Upload the torrent file to a torrent tracker via SSH
+    * [X] Upload the torrent file to a web server via SSH
+    * [X] Upload the torrent file to a torrent tracker via SSH
     * [ ] Upload the torrent to transmission-server
   * [ ] Inform the world of the new torrent file
-    * [x] Add the magnet link to a RSS feed
-    * [x] Upload the new RSS feed to the server
+    * [X] Add the magnet link to a RSS feed
+    * [X] Upload the new RSS feed to the server
     * [ ] Send an email to the arch-ports list
 
 ## License
